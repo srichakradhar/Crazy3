@@ -1,7 +1,7 @@
 package com.chukree.thumbsdown;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -9,27 +9,32 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Timer;
-
 public class GameActivity extends Activity {
 
-    Button btnTap;
-    Timer timer = new Timer();
+    private Button btnTap, btnPause;
     int count = 0;
     long timerPeriod = 1000;
-    private int multiple = 3, score = 0, hiScore = 0, lives = 3, level = 1, lastTapNum = 0;
+    private int multiple = 3, hiScore = 0, lives = 3, level = 1, lastTapNum = 0;
+    private static int score = 0;
     TextView tvScore;
     private boolean gameStarted = false;
     private String TAG = GameActivity.class.toString();
     private Handler handler = new Handler();
+    private Typeface tfMontserrat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        tfMontserrat = Typeface.createFromAsset(getAssets(),"fonts/Montserrat-Hairline.otf");
+
         btnTap = (Button) findViewById(R.id.button_tap);
+        btnPause = (Button) findViewById(R.id.button_pause);
         tvScore = (TextView) findViewById(R.id.tvScore);
+        btnTap.setTypeface(tfMontserrat);
+        btnPause.setTypeface(tfMontserrat);
+        tvScore.setTypeface(tfMontserrat);
 
         btnTap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,6 +42,21 @@ public class GameActivity extends Activity {
 
                 if (timerPeriod > 50 && gameStarted) {
                     timerPeriod -= 50;
+                }
+
+                if (btnTap.getText().toString().equals("Start")) {
+
+                    // Set Clock1.TimerEnabled to true
+                    handler.postDelayed(runnable, timerPeriod);
+
+                    // set btnPause.Visible to true
+
+                    // set "GameStarted" to true
+                    gameStarted = true;
+
+                    // set lastTapNum to 0
+                    lastTapNum = 0;
+
                 }
 
                 if(gameStarted){
@@ -47,17 +67,17 @@ public class GameActivity extends Activity {
                         // TODO: call Sound1.play
 
                         // if global count ≠ 0
-                        if(count != 0){
+                        if(count > 0){
                             lastTapNum = count;
                             score += 1;
                         }
 
-                        tvScore.setText("" + score);
                     }
                     // user tapped on a wrong number!
                     else{
 
-                        score -= 1; lives -= 1;
+                        score -= 1;
+                        lives -= 1;
 
                         // TODO: call Sound2.play
 
@@ -66,20 +86,6 @@ public class GameActivity extends Activity {
                         // TODO: A mechanism to alert the wrong doing (e.g. changing bg & fg colors)
                     }
 
-                    if (btnTap.getText().toString().equals("Start")) {
-
-                        // Set Clock1.TimerEnabled to true
-                        handler.postDelayed(runnable, timerPeriod);
-
-                        // set btnPause.Visible to true
-
-                        // set "GameStarted" to true
-                        gameStarted = true;
-
-                        // set lastTapNum to 0
-                        lastTapNum = 0;
-
-                    }
                 }
                 // clicked btnTap to RESET the game
                 else{
@@ -88,10 +94,16 @@ public class GameActivity extends Activity {
                     timerPeriod = 1000;
                     // TODO Set lblLives.Text to ❤❤❤ or ♥♥♥ and ♡♡♡
 
+                    btnTap.setTextSize(96);
+                    runnable.run();
                 }
 
                 // set btnTap.Enabled to false
                 btnTap.setEnabled(false);
+
+                // update the score
+                tvScore.setText(String.format("%d", score));
+
             }
         });
     }
@@ -104,6 +116,7 @@ public class GameActivity extends Activity {
             count += 1;
             btnTap.setText(String.valueOf(count));
             Log.d(TAG, "Firing after + " + timerPeriod + "ms");
+            btnTap.setEnabled(true);
 
             // TODO: Change back the color of the text to normal (from colors for "tapped wrongly")
 
@@ -152,31 +165,36 @@ public class GameActivity extends Activity {
                 }
             }else if(level >= 4){
                 // change btnTap background color
-                btnTap.setBackgroundColor(Color.argb(255, 214, 255, 143));
+                // btnTap.setBackgroundColor(Color.argb(255, 214, 255, 143));
                 timerPeriod = 250;
             }else if(level >= 3){
                 // change btnTap background color
-                btnTap.setBackgroundColor(Color.argb(255, 203, 255, 143));
+                // btnTap.setBackgroundColor(Color.argb(255, 203, 255, 143));
                 timerPeriod = 500;
                 if(score >= 7){
                     level = 4;
                 }
             }else if(level >= 2){
                 // change btnTap background color
-                btnTap.setBackgroundColor(Color.argb(255, 143, 255, 143));
+                // btnTap.setBackgroundColor(Color.argb(255, 143, 255, 143));
                 timerPeriod = 750;
                 if(score >= 5){
                     level = 3;
                 }
             }else{
-                btnTap.setBackgroundColor(Color.argb(255, 143, 255, 143));
+                // btnTap.setBackgroundColor(Color.argb(255, 143, 255, 143));
                 timerPeriod = 1000;
                 if(score >= 2){
                     level = 2;
                 }
             }
 
-            handler.postDelayed(runnable, timerPeriod);
+            if(gameStarted){
+                handler.postDelayed(runnable, timerPeriod);
+            }else {
+                btnTap.setTextSize(24);
+                btnTap.setText("Sorry! You ran out of lives!\n Touch to try Again...");
+            }
         }
     };
 
