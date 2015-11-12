@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ public class GameActivity extends Activity {
     private String TAG = GameActivity.class.toString();
     private Handler handler = new Handler();
     private Typeface tfMontserrat;
+    Animation scaleUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +49,21 @@ public class GameActivity extends Activity {
 
                 if (btnTap.getText().toString().equals("Start")) {
 
-                    // Set Clock1.TimerEnabled to true
-                    handler.postDelayed(runnable, timerPeriod);
-
-                    // set btnPause.Visible to true
-
                     // set "GameStarted" to true
                     gameStarted = true;
 
+                    // Set Clock1.TimerEnabled to true
+                    runnable.run();
+
+                    // set btnPause.Visible to true
+
                     // set lastTapNum to 0
                     lastTapNum = 0;
+
+                    // set btnTap.Background to transparent
+                    btnTap.setBackgroundResource(R.drawable.circle);
+                    scaleUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_up);
+                    btnTap.setAnimation(scaleUp);
 
                 }
 
@@ -96,6 +104,8 @@ public class GameActivity extends Activity {
 
                     btnTap.setTextSize(96);
                     runnable.run();
+                    btnTap.setBackgroundResource(R.drawable.circle);
+                    btnTap.setAnimation(scaleUp);
                 }
 
                 // set btnTap.Enabled to false
@@ -194,6 +204,7 @@ public class GameActivity extends Activity {
             }else {
                 btnTap.setTextSize(24);
                 btnTap.setText("Sorry! You ran out of lives!\n Touch to try Again...");
+                btnTap.setBackgroundResource(0);
             }
         }
     };

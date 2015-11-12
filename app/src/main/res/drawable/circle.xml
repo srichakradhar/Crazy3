@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="ring"
+    android:innerRadius="128dp"
+    android:thickness="5dp"
+    android:useLevel="false">
+
+    <solid android:color="@android:color/background_light" />
+
+</shape>
+
+<!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">-->
+    <!--&lt;!&ndash;<item&ndash;&gt;-->
+        <!--&lt;!&ndash;android:top="4dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:right="4dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:bottom="4dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:left="4dp">&ndash;&gt;-->
+        <!--&lt;!&ndash;<shape&ndash;&gt;-->
+            <!--&lt;!&ndash;android:shape="oval">&ndash;&gt;-->
+            <!--&lt;!&ndash;<solid android:color="#4d4d4d" />&ndash;&gt;-->
+        <!--&lt;!&ndash;</shape>&ndash;&gt;-->
+    <!--&lt;!&ndash;</item>&ndash;&gt;-->
+    <!--<item>-->
+        <!--<shape-->
+            <!--android:shape="oval">-->
+            <!--<stroke android:width="5dp"-->
+                <!--android:color="#4d4d4d"/>-->
+        <!--</shape>-->
+    <!--</item>-->
+<!--</layer-list>-->
