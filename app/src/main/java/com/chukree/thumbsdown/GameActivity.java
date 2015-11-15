@@ -1,6 +1,7 @@
 package com.chukree.thumbsdown;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -11,11 +12,12 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class GameActivity extends Activity {
 
-    private Button btnTap, btnPause;
+    private Button btnTap, btnPause, btnHelp;
     int count = 0;
     long timerPeriod = 1000;
     private int multiple = 3, hiScore = 0, lives = 3, level = 1, lastTapNum = 0;
@@ -25,8 +27,11 @@ public class GameActivity extends Activity {
     private String TAG = GameActivity.class.toString();
     private Handler handler = new Handler();
     private Typeface tfMontserrat;
-    private Animation scaleUp, scaleDown;
+    private static Animation scaleUp, scaleDown;
     private GradientDrawable bgShape;
+    private android.content.Context context;
+    private TextView lblLives;
+    private String strLives;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +43,14 @@ public class GameActivity extends Activity {
         btnTap = (Button) findViewById(R.id.button_tap);
         btnPause = (Button) findViewById(R.id.button_pause);
         tvScore = (TextView) findViewById(R.id.tvScore);
+        btnHelp = (Button) findViewById(R.id.button_help);
+        lblLives = (TextView) findViewById(R.id.text_view_lives);
         btnTap.setTypeface(tfMontserrat);
         btnPause.setTypeface(tfMontserrat);
         tvScore.setTypeface(tfMontserrat);
+        context = getApplicationContext();
+
+        showOverLay();
         // bgShape = (GradientDrawable) this.getResources().getDrawable(R.drawable.circle);
 
                 btnTap.setOnClickListener(new View.OnClickListener() {
@@ -51,28 +61,9 @@ public class GameActivity extends Activity {
                     timerPeriod -= 50;
                 }
 
-                if (btnTap.getText().toString().equals("Start")) {
-
-                    // set "GameStarted" to true
-                    gameStarted = true;
-
-                    // set btnPause.Visible to true
-
-                    // set lastTapNum to 0
-                    lastTapNum = 0;
-
-                    // set btnTap.Background to transparent
-                    btnTap.setBackgroundResource(R.drawable.circle);
-                    scaleUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_up);
-                    btnTap.setAnimation(scaleUp);
-                    bgShape = (GradientDrawable) btnTap.getBackground();
-
-                    // Set Clock1.TimerEnabled to true
-                    runnable.run();
-
-                }
-
                 if (gameStarted && count > 0) {
+
+                    bgShape = (GradientDrawable) btnTap.getBackground();
 
                     // if global count % multiple == 0
                     if (count % multiple == 0) {
@@ -84,6 +75,7 @@ public class GameActivity extends Activity {
                         lastTapNum = count;
                         score += 1;
 
+
                         bgShape.setColor(Color.GREEN);
                         // bgShape.invalidateSelf();
 
@@ -91,23 +83,54 @@ public class GameActivity extends Activity {
                     // user tapped on a wrong number!
                     else {
 
-                        score -= 1;
+                        /*if(score > 0) score -= 1;
                         lives -= 1;
 
                         // TODO: call Sound2.play
 
                         // TODO: set lblLives.Text to "♥♥♥".substring(lives) + ♡♡♡.substring(3 - lives)
+                        String strLives = "";
+
+                        if(lives <= 0)
+                            strLives = "♡♡♡";
+                        else if(lives >= 3)
+                            strLives = "♥♥♥";
+                        else
+                            strLives = "♡♡♡".substring(0, 3 - lives) + "♥♥♥".substring(0, lives);
+
+                        lblLives.setText(strLives); */
 
                         // TODO: A mechanism to alert the wrong doing (e.g. changing bg & fg colors)
 
                         if (lives <= 0) {
-                            scaleDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_down);
+                            scaleDown = AnimationUtils.loadAnimation(context, R.anim.scale_down);
                             scaleDown.setDuration(timerPeriod/2);
                             btnTap.setAnimation(scaleDown);
                         }
 
-                        bgShape.setColor(Color.RED);
+                        bgShape.setColor(getResources().getColor(R.color.wrong_red));
                         // bgShape.invalidateSelf();
+                    }
+
+                    if (btnTap.getText().toString().equals("Start")) {
+
+                        // set "GameStarted" to true
+                        gameStarted = true;
+
+                        // set btnPause.Visible to true
+
+                        // set lastTapNum to 0
+                        lastTapNum = 0;
+
+                        // set btnTap.Background to transparent
+                        btnTap.setBackgroundResource(R.drawable.circle);
+                        scaleUp = AnimationUtils.loadAnimation(context, R.anim.scale_up);
+                        btnTap.setAnimation(scaleUp);
+                        bgShape = (GradientDrawable) btnTap.getBackground();
+
+                        // Set Clock1.TimerEnabled to true
+                        runnable.run();
+
                     }
 
                 }
@@ -121,9 +144,13 @@ public class GameActivity extends Activity {
                     level = 1;
                     timerPeriod = 1000;
                     // TODO Set lblLives.Text to ❤❤❤ or ♥♥♥ and ♡♡♡
+                    lblLives.setText("♥♥♥");
 
                     btnTap.setTextSize(96);
                     btnTap.setBackgroundResource(R.drawable.circle);
+                    scaleUp = AnimationUtils.loadAnimation(context, R.anim.scale_up);
+                    bgShape = (GradientDrawable) btnTap.getBackground();
+                    bgShape.setColor(Color.WHITE);
                     btnTap.setAnimation(scaleUp);
                     runnable.run();
                 }
@@ -153,6 +180,45 @@ public class GameActivity extends Activity {
                 }
             }
         });
+
+        btnHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameStarted = false;
+                handler.removeCallbacks(runnable);
+                showOverLay();
+            }
+        });
+    }
+
+    private void showOverLay(){
+
+        final Dialog dialog = new Dialog(GameActivity.this, android.R.style.Theme_Translucent_NoTitleBar);
+
+        dialog.setContentView(R.layout.help_overlay);
+
+        LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.layout_help_overlay);
+        TextView lblHelpText = (TextView) layout.findViewById(R.id.textView_help_text);
+        lblHelpText.setTypeface(tfMontserrat);
+
+        layout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+
+            public void onClick(View arg0) {
+
+                gameStarted = true;
+                if(!btnTap.getText().toString().equals("Start")) {
+                    runnable.run();
+                }
+                dialog.dismiss();
+
+            }
+
+        });
+
+        dialog.show();
+
     }
 
     private Runnable runnable = new Runnable(){
@@ -161,9 +227,6 @@ public class GameActivity extends Activity {
         public void run() {
 
             count += 1;
-
-            // bgShape.setColor(Color.WHITE);
-            // bgShape.invalidateSelf();
 
             btnTap.setText(String.valueOf(count));
             Log.d(TAG, "Firing after + " + timerPeriod + "ms");
@@ -185,10 +248,22 @@ public class GameActivity extends Activity {
             // catching when number is missed
             if(((count - 1) % multiple == 0) && lastTapNum < count - multiple){
 
-                // score -= 1; lives -= 1;
+                Log.d(TAG, "last tapped number was " + lastTapNum);
+
+                 score -= 1; lives -= 1;
                 // TODO: Sound2.play
 
-                // TODO: set lblLives.Text to "♥♥♥".substring(lives) + ♡♡♡.substring(3 - lives)
+                // DONE: set lblLives.Text to "♥♥♥".substring(lives) + ♡♡♡.substring(3 - lives)
+
+                if(lives <= 0)
+                    strLives = "♡♡♡";
+                else if(lives >= 3)
+                    strLives = "♥♥♥";
+                else
+                    strLives = "♡♡♡".substring(0, 3 - lives) + "♥♥♥".substring(0, lives);
+
+                lblLives.setText(strLives);
+                bgShape.setColor(Color.RED);
             }
 
             // lives exhausted
@@ -246,6 +321,7 @@ public class GameActivity extends Activity {
             {
                 btnTap.setTextSize(26);
                 btnTap.setText("Sorry! You ran out of lives!\n\nTouch to try Again...");
+                lastTapNum = 0;
                 btnTap.setBackgroundResource(0);
             }
         }
