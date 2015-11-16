@@ -46,7 +46,20 @@
             android:id="@+id/button_help"
             android:background="@drawable/how_to"
             android:height="48dp"
-            android:width="48dp" />
+            android:width="48dp"
+            android:layout_margin="5dp"
+            android:padding="5dp"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/button_preferences"
+            android:background="@drawable/settings"
+            android:height="48dp"
+            android:width="48dp"
+            android:layout_margin="5dp"
+            android:padding="5dp" />
     </LinearLayout>
 
     <View
@@ -70,27 +83,5 @@
         android:textSize="96sp"
         android:textStyle="bold"
         android:background="@android:color/transparent" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.05"
-        android:text="Pause"
-        android:id="@+id/button_pause"
-        android:layout_centerHorizontal="true"
-        android:background="#5147A3"
-        android:layout_margin="@dimen/abc_action_bar_subtitle_top_margin_material"
-        android:padding="@dimen/abc_button_padding_vertical_material"
-        android:textColor="#ffffff"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="0.1" >
-    </View>
 
 </LinearLayout>

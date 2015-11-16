@@ -2,6 +2,7 @@ package com.chukree.thumbsdown;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -17,7 +18,7 @@ import android.widget.TextView;
 
 public class GameActivity extends Activity {
 
-    private Button btnTap, btnPause, btnHelp;
+    private Button btnTap, btnHelp, btnSettings; //btnPause;
     int count = 0;
     long timerPeriod = 1000;
     private int multiple = 3, hiScore = 0, lives = 3, level = 1, lastTapNum = 0;
@@ -41,12 +42,13 @@ public class GameActivity extends Activity {
         tfMontserrat = Typeface.createFromAsset(getAssets(),"fonts/Montserrat-Hairline.otf");
 
         btnTap = (Button) findViewById(R.id.button_tap);
-        btnPause = (Button) findViewById(R.id.button_pause);
+        // btnPause = (Button) findViewById(R.id.button_pause);
         tvScore = (TextView) findViewById(R.id.tvScore);
         btnHelp = (Button) findViewById(R.id.button_help);
         lblLives = (TextView) findViewById(R.id.text_view_lives);
         btnTap.setTypeface(tfMontserrat);
-        btnPause.setTypeface(tfMontserrat);
+        btnSettings = (Button) findViewById(R.id.button_preferences);
+        // btnPause.setTypeface(tfMontserrat);
         tvScore.setTypeface(tfMontserrat);
         context = getApplicationContext();
 
@@ -164,7 +166,7 @@ public class GameActivity extends Activity {
             }
         });
 
-        btnPause.setOnClickListener(new View.OnClickListener() {
+        /*btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(gameStarted) {
@@ -179,7 +181,7 @@ public class GameActivity extends Activity {
                     runnable.run();
                 }
             }
-        });
+        });*/
 
         btnHelp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,6 +189,13 @@ public class GameActivity extends Activity {
                 gameStarted = false;
                 handler.removeCallbacks(runnable);
                 showOverLay();
+            }
+        });
+
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
             }
         });
     }
@@ -208,9 +217,11 @@ public class GameActivity extends Activity {
             public void onClick(View arg0) {
 
                 gameStarted = true;
-                if(!btnTap.getText().toString().equals("Start")) {
-                    runnable.run();
-                }
+                btnTap.setBackgroundResource(R.drawable.circle);
+                scaleUp = AnimationUtils.loadAnimation(context, R.anim.scale_up);
+                btnTap.setAnimation(scaleUp);
+                bgShape = (GradientDrawable) btnTap.getBackground();
+                runnable.run();
                 dialog.dismiss();
 
             }

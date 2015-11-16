@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference android:title="Your Name"
+        android:key="username"
+        android:summary="Please provide your username"></EditTextPreference>
+
+    <ListPreference     android:title="Speed"
+        android:summary="Select the Speed at which numbers change (in sec)"
+        android:key="speed"
+        android:defaultValue="1"
+        android:entries="@array/speeds"
+        android:entryValues="@array/speeds" />
+
+    <ListPreference     android:title="Level (Multiple)"
+        android:summary="Select the kind of data that you would like to download"
+        android:key="multiple"
+        android:defaultValue="3"
+        android:entries="@array/multiples"
+        android:entryValues="@array/multiples" />
+</PreferenceScreen>
