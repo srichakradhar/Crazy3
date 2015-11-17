@@ -9,10 +9,10 @@
         android:key="speed"
         android:defaultValue="1"
         android:entries="@array/speeds"
-        android:entryValues="@array/speeds" />
+        android:entryValues="@array/speedValues" />
 
     <ListPreference     android:title="Level (Multiple)"
-        android:summary="Select the kind of data that you would like to download"
+        android:summary="Select the number whose multiples you wanna catch."
         android:key="multiple"
         android:defaultValue="3"
         android:entries="@array/multiples"

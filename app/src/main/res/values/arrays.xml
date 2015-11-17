@@ -13,4 +13,9 @@
         <item>Super Man</item>
         <item>Mental Man</item>
     </string-array>
+    <string-array name="speedValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

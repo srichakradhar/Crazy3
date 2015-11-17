@@ -3,11 +3,13 @@ package com.chukree.thumbsdown;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -18,7 +20,7 @@ import android.widget.TextView;
 
 public class GameActivity extends Activity {
 
-    private Button btnTap, btnHelp, btnSettings; //btnPause;
+    private Button btnTap;
     int count = 0;
     long timerPeriod = 1000;
     private int multiple = 3, hiScore = 0, lives = 3, level = 1, lastTapNum = 0;
@@ -32,7 +34,8 @@ public class GameActivity extends Activity {
     private GradientDrawable bgShape;
     private android.content.Context context;
     private TextView lblLives;
-    private String strLives;
+    private SharedPreferences preferences;
+    SharedPreferences.OnSharedPreferenceChangeListener preferencesListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,17 +43,19 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
 
         tfMontserrat = Typeface.createFromAsset(getAssets(),"fonts/Montserrat-Hairline.otf");
-
         btnTap = (Button) findViewById(R.id.button_tap);
         // btnPause = (Button) findViewById(R.id.button_pause);
         tvScore = (TextView) findViewById(R.id.tvScore);
-        btnHelp = (Button) findViewById(R.id.button_help);
+        Button btnHelp = (Button) findViewById(R.id.button_help);
         lblLives = (TextView) findViewById(R.id.text_view_lives);
         btnTap.setTypeface(tfMontserrat);
-        btnSettings = (Button) findViewById(R.id.button_preferences);
+        Button btnSettings = (Button) findViewById(R.id.button_preferences);
         // btnPause.setTypeface(tfMontserrat);
         tvScore.setTypeface(tfMontserrat);
         context = getApplicationContext();
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        timerPeriod = 1000 / Integer.parseInt(preferences.getString("speed", "1"));
+        multiple = Integer.parseInt(preferences.getString("multiple", "3"));
 
         showOverLay();
         // bgShape = (GradientDrawable) this.getResources().getDrawable(R.drawable.circle);
@@ -59,9 +64,9 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                if (timerPeriod > 50 && gameStarted) {
-                    timerPeriod -= 50;
-                }
+//                if (timerPeriod > 50 && gameStarted) {
+//                    timerPeriod -= 50;
+//                }
 
                 if (gameStarted && count > 0) {
 
@@ -85,7 +90,7 @@ public class GameActivity extends Activity {
                     // user tapped on a wrong number!
                     else {
 
-                        /*if(score > 0) score -= 1;
+                        if(score > 0) score -= 1;
                         lives -= 1;
 
                         // TODO: call Sound2.play
@@ -100,7 +105,7 @@ public class GameActivity extends Activity {
                         else
                             strLives = "♡♡♡".substring(0, 3 - lives) + "♥♥♥".substring(0, lives);
 
-                        lblLives.setText(strLives); */
+                        lblLives.setText(strLives);
 
                         // TODO: A mechanism to alert the wrong doing (e.g. changing bg & fg colors)
 
@@ -110,7 +115,7 @@ public class GameActivity extends Activity {
                             btnTap.setAnimation(scaleDown);
                         }
 
-                        bgShape.setColor(getResources().getColor(R.color.wrong_red));
+                        bgShape.setColor(Color.RED);
                         // bgShape.invalidateSelf();
                     }
 
@@ -195,9 +200,32 @@ public class GameActivity extends Activity {
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                gameStarted = false;
+                handler.removeCallbacks(runnable);
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        preferencesListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+                if(s.equals("speed"))
+                    timerPeriod = 1000 / Integer.parseInt(preferences.getString("speed", "1"));
+                else if(s.equals("multiple"))
+                    multiple = Integer.parseInt(preferences.getString("multiple", "3"));
+            }
+        };
+        preferences.registerOnSharedPreferenceChangeListener(preferencesListener);
+
+        if(!btnTap.getText().toString().equals("Start")) {
+            gameStarted = true;
+            runnable.run();
+        }
     }
 
     private void showOverLay(){
@@ -266,6 +294,7 @@ public class GameActivity extends Activity {
 
                 // DONE: set lblLives.Text to "♥♥♥".substring(lives) + ♡♡♡.substring(3 - lives)
 
+                String strLives;
                 if(lives <= 0)
                     strLives = "♡♡♡";
                 else if(lives >= 3)
@@ -300,31 +329,32 @@ public class GameActivity extends Activity {
                     // if(isInTutorialMode)// btnTap.setText("Sorry! You are in tutorial mode!");
                     // else btnTap.setText("Sorry! You couldn't beat the high score!");
                 }
-            }else if(level >= 4){
-                // change btnTap background color
-                // btnTap.setBackgroundColor(Color.argb(255, 214, 255, 143));
-                timerPeriod = 250;
-            }else if(level >= 3){
-                // change btnTap background color
-                // btnTap.setBackgroundColor(Color.argb(255, 203, 255, 143));
-                timerPeriod = 500;
-                if(score >= 7){
-                    level = 4;
-                }
-            }else if(level >= 2){
-                // change btnTap background color
-                // btnTap.setBackgroundColor(Color.argb(255, 143, 255, 143));
-                timerPeriod = 750;
-                if(score >= 5){
-                    level = 3;
-                }
-            }else{
-                // btnTap.setBackgroundColor(Color.argb(255, 143, 255, 143));
-                timerPeriod = 1000;
-                if(score >= 2){
-                    level = 2;
-                }
             }
+// else if(level >= 4){
+//                // change btnTap background color
+//                // btnTap.setBackgroundColor(Color.argb(255, 214, 255, 143));
+//                timerPeriod = 250;
+//            }else if(level >= 3){
+//                // change btnTap background color
+//                // btnTap.setBackgroundColor(Color.argb(255, 203, 255, 143));
+//                timerPeriod = 500;
+//                if(score >= 7){
+//                    level = 4;
+//                }
+//            }else if(level >= 2){
+//                // change btnTap background color
+//                // btnTap.setBackgroundColor(Color.argb(255, 143, 255, 143));
+//                timerPeriod = 750;
+//                if(score >= 5){
+//                    level = 3;
+//                }
+//            }else{
+//                // btnTap.setBackgroundColor(Color.argb(255, 143, 255, 143));
+//                timerPeriod = 1000;
+//                if(score >= 2){
+//                    level = 2;
+//                }
+//            }
 
             if(gameStarted){
                 handler.postDelayed(runnable, timerPeriod);
