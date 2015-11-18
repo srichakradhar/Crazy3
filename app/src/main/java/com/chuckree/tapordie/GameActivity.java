@@ -1,4 +1,4 @@
-package com.chukree.thumbsdown;
+package com.chuckree.tapordie;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -40,16 +40,16 @@ public class GameActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(com.chuckree.tapordie.R.layout.activity_game);
 
         tfMontserrat = Typeface.createFromAsset(getAssets(),"fonts/Montserrat-Hairline.otf");
-        btnTap = (Button) findViewById(R.id.button_tap);
+        btnTap = (Button) findViewById(com.chuckree.tapordie.R.id.button_tap);
         // btnPause = (Button) findViewById(R.id.button_pause);
-        tvScore = (TextView) findViewById(R.id.tvScore);
-        Button btnHelp = (Button) findViewById(R.id.button_help);
-        lblLives = (TextView) findViewById(R.id.text_view_lives);
+        tvScore = (TextView) findViewById(com.chuckree.tapordie.R.id.tvScore);
+        Button btnHelp = (Button) findViewById(com.chuckree.tapordie.R.id.button_help);
+        lblLives = (TextView) findViewById(com.chuckree.tapordie.R.id.text_view_lives);
         btnTap.setTypeface(tfMontserrat);
-        Button btnSettings = (Button) findViewById(R.id.button_preferences);
+        Button btnSettings = (Button) findViewById(com.chuckree.tapordie.R.id.button_preferences);
         // btnPause.setTypeface(tfMontserrat);
         tvScore.setTypeface(tfMontserrat);
         context = getApplicationContext();
@@ -110,7 +110,7 @@ public class GameActivity extends Activity {
                         // TODO: A mechanism to alert the wrong doing (e.g. changing bg & fg colors)
 
                         if (lives <= 0) {
-                            scaleDown = AnimationUtils.loadAnimation(context, R.anim.scale_down);
+                            scaleDown = AnimationUtils.loadAnimation(context, com.chuckree.tapordie.R.anim.scale_down);
                             scaleDown.setDuration(timerPeriod/2);
                             btnTap.setAnimation(scaleDown);
                         }
@@ -130,8 +130,8 @@ public class GameActivity extends Activity {
                         lastTapNum = 0;
 
                         // set btnTap.Background to transparent
-                        btnTap.setBackgroundResource(R.drawable.circle);
-                        scaleUp = AnimationUtils.loadAnimation(context, R.anim.scale_up);
+                        btnTap.setBackgroundResource(com.chuckree.tapordie.R.drawable.circle);
+                        scaleUp = AnimationUtils.loadAnimation(context, com.chuckree.tapordie.R.anim.scale_up);
                         btnTap.setAnimation(scaleUp);
                         bgShape = (GradientDrawable) btnTap.getBackground();
 
@@ -148,14 +148,14 @@ public class GameActivity extends Activity {
                     score = 0;
                     count = 0;
                     lives = 3;
-                    level = 1;
-                    timerPeriod = 1000;
+//                    level = 1;
+//                    timerPeriod = 1000;
                     // TODO Set lblLives.Text to ❤❤❤ or ♥♥♥ and ♡♡♡
                     lblLives.setText("♥♥♥");
 
                     btnTap.setTextSize(96);
-                    btnTap.setBackgroundResource(R.drawable.circle);
-                    scaleUp = AnimationUtils.loadAnimation(context, R.anim.scale_up);
+                    btnTap.setBackgroundResource(com.chuckree.tapordie.R.drawable.circle);
+                    scaleUp = AnimationUtils.loadAnimation(context, com.chuckree.tapordie.R.anim.scale_up);
                     bgShape = (GradientDrawable) btnTap.getBackground();
                     bgShape.setColor(Color.WHITE);
                     btnTap.setAnimation(scaleUp);
@@ -232,10 +232,10 @@ public class GameActivity extends Activity {
 
         final Dialog dialog = new Dialog(GameActivity.this, android.R.style.Theme_Translucent_NoTitleBar);
 
-        dialog.setContentView(R.layout.help_overlay);
+        dialog.setContentView(com.chuckree.tapordie.R.layout.help_overlay);
 
-        LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.layout_help_overlay);
-        TextView lblHelpText = (TextView) layout.findViewById(R.id.textView_help_text);
+        LinearLayout layout = (LinearLayout) dialog.findViewById(com.chuckree.tapordie.R.id.layout_help_overlay);
+        TextView lblHelpText = (TextView) layout.findViewById(com.chuckree.tapordie.R.id.textView_help_text);
         lblHelpText.setTypeface(tfMontserrat);
 
         layout.setOnClickListener(new View.OnClickListener() {
@@ -245,8 +245,8 @@ public class GameActivity extends Activity {
             public void onClick(View arg0) {
 
                 gameStarted = true;
-                btnTap.setBackgroundResource(R.drawable.circle);
-                scaleUp = AnimationUtils.loadAnimation(context, R.anim.scale_up);
+                btnTap.setBackgroundResource(com.chuckree.tapordie.R.drawable.circle);
+                scaleUp = AnimationUtils.loadAnimation(context, com.chuckree.tapordie.R.anim.scale_up);
                 btnTap.setAnimation(scaleUp);
                 bgShape = (GradientDrawable) btnTap.getBackground();
                 runnable.run();

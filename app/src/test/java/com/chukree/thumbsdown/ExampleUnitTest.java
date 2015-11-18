@@ -1,4 +1,4 @@
-package com.chukree.thumbsdown;
+package com.chuckree.tapordie;
 
 import org.junit.Test;
 

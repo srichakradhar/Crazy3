@@ -1,4 +1,4 @@
-package com.chukree.thumbsdown;
+package com.chuckree.tapordie;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -15,11 +15,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(com.chuckree.tapordie.R.layout.activity_main);
 
-        btnPlay = (Button) findViewById(R.id.button_play);
-        btnHelp = (Button) findViewById(R.id.button_help);
-        btnSettings = (Button) findViewById(R.id.button_settings);
+        btnPlay = (Button) findViewById(com.chuckree.tapordie.R.id.button_play);
+        btnHelp = (Button) findViewById(com.chuckree.tapordie.R.id.button_help);
+        btnSettings = (Button) findViewById(com.chuckree.tapordie.R.id.button_settings);
 
         tfMontserrat = Typeface.createFromAsset(getAssets(),"fonts/Montserrat-Hairline.otf");
         btnPlay.setTypeface(tfMontserrat);
