@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 public class GameActivity extends Activity {
 
-    private Button btnTap;
+    private Button btnTap, btnShare;
     int count = 0;
     long timerPeriod = 1000;
     private int multiple = 3, hiScore = 0, lives = 3, level = 1, lastTapNum = 0;
@@ -45,6 +45,7 @@ public class GameActivity extends Activity {
         tfMontserrat = Typeface.createFromAsset(getAssets(),"fonts/Montserrat-Hairline.otf");
         btnTap = (Button) findViewById(com.chuckree.tapordie.R.id.button_tap);
         // btnPause = (Button) findViewById(R.id.button_pause);
+        btnShare = (Button) findViewById(R.id.button_share);
         tvScore = (TextView) findViewById(com.chuckree.tapordie.R.id.tvScore);
         Button btnHelp = (Button) findViewById(com.chuckree.tapordie.R.id.button_help);
         lblLives = (TextView) findViewById(com.chuckree.tapordie.R.id.text_view_lives);
@@ -203,6 +204,17 @@ public class GameActivity extends Activity {
                 gameStarted = false;
                 handler.removeCallbacks(runnable);
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            }
+        });
+
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "I've scored " + score + " in \"Tap or Die\"\nUp for a game?\n" + preferences.getString("username", ""));
+                sendIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
             }
         });
     }

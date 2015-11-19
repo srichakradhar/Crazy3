@@ -43,6 +43,17 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:id="@+id/button_share"
+            android:background="@drawable/share"
+            android:height="48dp"
+            android:width="48dp"
+            android:layout_margin="5dp"
+            android:padding="5dp"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:id="@+id/button_help"
             android:background="@drawable/how_to"
             android:height="48dp"
