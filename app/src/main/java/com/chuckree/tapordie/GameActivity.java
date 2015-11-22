@@ -2,11 +2,14 @@ package com.chuckree.tapordie;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -17,6 +20,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class GameActivity extends Activity {
 
@@ -27,7 +37,7 @@ public class GameActivity extends Activity {
     private static int score = 0;
     TextView tvScore;
     private boolean gameStarted = false;
-    private String TAG = GameActivity.class.toString();
+    private String TAG = GameActivity.class.toString(), string_img_url = null , string_msg = null;;
     private Handler handler = new Handler();
     private Typeface tfMontserrat;
     private static Animation scaleUp, scaleDown;
@@ -36,6 +46,11 @@ public class GameActivity extends Activity {
     private TextView lblLives;
     private SharedPreferences preferences;
     SharedPreferences.OnSharedPreferenceChangeListener preferencesListener;
+    // Replace your KEY here and Run ,
+    public final String consumer_key = "z4OC2VzJ0V4gHPAienLHZuTmQ";
+    public final String secret_key = "6nbh8ciif5fSq9c7Eho2apQZvRWXHpAiDuHOZSrcxYbwqTHrx6";
+    File casted_image;
+    Button btnTweet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +65,7 @@ public class GameActivity extends Activity {
         Button btnHelp = (Button) findViewById(com.chuckree.tapordie.R.id.button_help);
         lblLives = (TextView) findViewById(com.chuckree.tapordie.R.id.text_view_lives);
         btnTap.setTypeface(tfMontserrat);
+        btnTweet = (Button) findViewById(R.id.button_tweet);
         Button btnSettings = (Button) findViewById(com.chuckree.tapordie.R.id.button_preferences);
         // btnPause.setTypeface(tfMontserrat);
         tvScore.setTypeface(tfMontserrat);
@@ -217,6 +233,12 @@ public class GameActivity extends Activity {
                 startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
             }
         });
+        btnTweet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickTwitt();
+            }
+        });
     }
 
     @Override
@@ -301,7 +323,7 @@ public class GameActivity extends Activity {
 
                 Log.d(TAG, "last tapped number was " + lastTapNum);
 
-                 score -= 1; lives -= 1;
+                 if(score > 0) score -= 1; lives -= 1;
                 // TODO: Sound2.play
 
                 // DONE: set lblLives.Text to "♥♥♥".substring(lives) + ♡♡♡.substring(3 - lives)
@@ -376,6 +398,7 @@ public class GameActivity extends Activity {
                 btnTap.setText("Sorry! You ran out of lives!\n\nTouch to try Again...");
                 lastTapNum = 0;
                 btnTap.setBackgroundResource(0);
+                btnTweet.setVisibility(View.VISIBLE);
             }
         }
     };
@@ -386,4 +409,81 @@ public class GameActivity extends Activity {
         handler.removeCallbacks(runnable);
     }
 
+
+    public void Call_My_Blog(View v) {
+        Intent intent = new Intent(GameActivity.this, My_Blog.class);
+        startActivity(intent);
+
+    }
+
+    // Here you can pass the string message & image path which you want to share
+    // in Twitter.
+    public void onClickTwitt() {
+        if (isNetworkAvailable()) {
+            Twitt_Sharing twitt = new Twitt_Sharing(GameActivity.this, consumer_key, secret_key);
+            string_img_url = "https://sites.google.com/site/srichakra3nsr3/my-profile/nenu.jpg";
+            string_msg = "I have scored " + score + " in Tap or Die.\nCan you beat my score? Check out: http://chuckree.com/android/tap_or_die";
+            InputStream in = null;
+            OutputStream out = null;
+            String filename = "tapOrDie.png";
+            try {
+                in = getAssets().open(filename);
+                casted_image = new File(getExternalFilesDir(null), filename);
+                out = new FileOutputStream(casted_image);
+                byte[] buffer = new byte[1024];
+                int read;
+                while((read = in.read(buffer)) != -1){
+                    out.write(buffer, 0, read);
+                }
+            } catch(IOException e) {
+                Log.e("tag", "Failed to copy asset file: " + filename, e);
+            }
+            finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        // NOOP
+                    }
+                }
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException e) {
+                        // NOOP
+                    }
+                }
+            }
+            //casted_image = new File("/storage/emulated/legacy/nenu.jpg");
+            // Now share both message & image to sharing activity
+            twitt.shareToTwitter(string_msg, casted_image);
+
+        } else {
+            showToast("No Network Connection Available !!!");
+        }
+    }
+
+    // when user will click on twitter then first that will check that is
+    // internet exist or not
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity == null) {
+            return false;
+        } else {
+            NetworkInfo[ ] info = connectivity.getAllNetworkInfo();
+            if (info != null) {
+                for (int i = 0; i < info.length; i++) {
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+
+    }
 }

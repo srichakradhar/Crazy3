@@ -95,4 +95,17 @@
         android:textStyle="bold"
         android:background="@android:color/transparent" />
 
+    <Button
+        android:id="@+id/button_tweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClickTwitt"
+        android:text="@string/share_on_twitter"
+        android:layout_marginBottom="20dp"
+        android:visibility="invisible"
+        android:background="@android:color/transparent"
+        android:textColor="#ffffff" />
+
 </LinearLayout>
