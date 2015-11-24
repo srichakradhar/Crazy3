@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -22,6 +24,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,12 +35,13 @@ import java.io.OutputStream;
 
 public class GameActivity extends Activity {
 
+    private static final String HI_SCORE_KEY = "High Score";
     private Button btnTap, btnShare;
     int count = 0;
     long timerPeriod = 1000;
     private int multiple = 3, hiScore = 0, lives = 3, level = 1, lastTapNum = 0;
     private static int score = 0;
-    TextView tvScore;
+    TextView tvScore, tvHiScore;
     private boolean gameStarted = false;
     private String TAG = GameActivity.class.toString(), string_img_url = null , string_msg = null;;
     private Handler handler = new Handler();
@@ -44,24 +50,47 @@ public class GameActivity extends Activity {
     private GradientDrawable bgShape;
     private android.content.Context context;
     private TextView lblLives;
-    private SharedPreferences preferences;
+    private SharedPreferences preferences, prefs;
     SharedPreferences.OnSharedPreferenceChangeListener preferencesListener;
     // Replace your KEY here and Run ,
     public final String consumer_key = "z4OC2VzJ0V4gHPAienLHZuTmQ";
     public final String secret_key = "6nbh8ciif5fSq9c7Eho2apQZvRWXHpAiDuHOZSrcxYbwqTHrx6";
     File casted_image;
     Button btnTweet;
+    boolean proMode = false, loaded = false;;
+    SharedPreferences.Editor editor;
+    private SoundPool soundPool;
+    private int soundDingID, soundErrID;
+    float volume;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.chuckree.tapordie.R.layout.activity_game);
 
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        // Load the sound
+        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                loaded = true;
+            }
+        });
+        soundDingID = soundPool.load(this, R.raw.ding, 1);
+        soundErrID = soundPool.load(this, R.raw.err, 1);
+
         tfMontserrat = Typeface.createFromAsset(getAssets(),"fonts/Montserrat-Hairline.otf");
         btnTap = (Button) findViewById(com.chuckree.tapordie.R.id.button_tap);
         // btnPause = (Button) findViewById(R.id.button_pause);
         btnShare = (Button) findViewById(R.id.button_share);
-        tvScore = (TextView) findViewById(com.chuckree.tapordie.R.id.tvScore);
+        tvScore = (TextView) findViewById(R.id.tv_score);
+        tvHiScore = (TextView) findViewById(R.id.tv_hi_score);
         Button btnHelp = (Button) findViewById(com.chuckree.tapordie.R.id.button_help);
         lblLives = (TextView) findViewById(com.chuckree.tapordie.R.id.text_view_lives);
         btnTap.setTypeface(tfMontserrat);
@@ -69,12 +98,16 @@ public class GameActivity extends Activity {
         Button btnSettings = (Button) findViewById(com.chuckree.tapordie.R.id.button_preferences);
         // btnPause.setTypeface(tfMontserrat);
         tvScore.setTypeface(tfMontserrat);
+        tvHiScore.setTypeface(tfMontserrat);
         context = getApplicationContext();
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        timerPeriod = 1000 / Integer.parseInt(preferences.getString("speed", "1"));
+        prefs = getSharedPreferences(MainActivity.MY_PREFERENCES, Context.MODE_PRIVATE);
+        proMode = prefs.getBoolean(MainActivity.GAME_MODE_KEY, false);
+        if(proMode) timerPeriod = 1000 / Integer.parseInt(preferences.getString("speed", "1"));
         multiple = Integer.parseInt(preferences.getString("multiple", "3"));
+        hiScore = prefs.getInt(HI_SCORE_KEY, 0);
 
-        showOverLay();
+        if(getIntent().getBooleanExtra("help", false)) showOverLay();
         // bgShape = (GradientDrawable) this.getResources().getDrawable(R.drawable.circle);
 
                 btnTap.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +117,13 @@ public class GameActivity extends Activity {
 //                if (timerPeriod > 50 && gameStarted) {
 //                    timerPeriod -= 50;
 //                }
+
+                AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+                float actualVolume = (float) audioManager
+                        .getStreamVolume(AudioManager.STREAM_MUSIC);
+                float maxVolume = (float) audioManager
+                        .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                volume = actualVolume / maxVolume;
 
                 if (gameStarted && count > 0) {
 
@@ -102,6 +142,13 @@ public class GameActivity extends Activity {
 
                         bgShape.setColor(Color.GREEN);
                         // bgShape.invalidateSelf();
+
+                        // Is the sound loaded already?
+                        if (loaded)
+                            soundPool.play(soundDingID, volume, volume, 1, 0, 1f);
+
+                        Animation expandIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.expand_in);
+                        btnTap.startAnimation(expandIn);
 
                     }
                     // user tapped on a wrong number!
@@ -134,6 +181,10 @@ public class GameActivity extends Activity {
 
                         bgShape.setColor(Color.RED);
                         // bgShape.invalidateSelf();
+
+                        // Is the sound loaded already?
+                        if (loaded)
+                            soundPool.play(soundErrID, volume, volume, 1, 0, 1f);
                     }
 
                     if (btnTap.getText().toString().equals("Start")) {
@@ -181,9 +232,6 @@ public class GameActivity extends Activity {
 
                 // set btnTap.Enabled to false
                 btnTap.setEnabled(false);
-
-                // update the score
-                tvScore.setText(String.format("%d", score));
 
             }
         });
@@ -245,16 +293,18 @@ public class GameActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        preferencesListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-                if(s.equals("speed"))
-                    timerPeriod = 1000 / Integer.parseInt(preferences.getString("speed", "1"));
-                else if(s.equals("multiple"))
-                    multiple = Integer.parseInt(preferences.getString("multiple", "3"));
-            }
-        };
-        preferences.registerOnSharedPreferenceChangeListener(preferencesListener);
+        if(proMode) {
+            preferencesListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+                    if (s.equals("speed"))
+                        timerPeriod = 1000 / Integer.parseInt(preferences.getString("speed", "1"));
+                    else if (s.equals("multiple"))
+                        multiple = Integer.parseInt(preferences.getString("multiple", "3"));
+                }
+            };
+            preferences.registerOnSharedPreferenceChangeListener(preferencesListener);
+        }
 
         if(!btnTap.getText().toString().equals("Start")) {
             gameStarted = true;
@@ -302,7 +352,6 @@ public class GameActivity extends Activity {
             count += 1;
 
             btnTap.setText(String.valueOf(count));
-            Log.d(TAG, "Firing after + " + timerPeriod + "ms");
             btnTap.setEnabled(true);
 
             // TODO: Change back the color of the text to normal (from colors for "tapped wrongly")
@@ -318,8 +367,8 @@ public class GameActivity extends Activity {
                 //TODO: change back the font size and color to normal
 
             }
-            // catching when number is missed
-            if(((count - 1) % multiple == 0) && lastTapNum < count - multiple){
+            // catching when number is missed while playing in pro mode
+            if(((count - 1) % multiple == 0) && lastTapNum < count - multiple && proMode){
 
                 Log.d(TAG, "last tapped number was " + lastTapNum);
 
@@ -338,6 +387,12 @@ public class GameActivity extends Activity {
 
                 lblLives.setText(strLives);
                 bgShape.setColor(Color.RED);
+
+                if (loaded)
+                    soundPool.play(soundErrID, volume, volume, 1, 0, 1f);
+
+                Animation animWobble = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.wobble);
+                btnTap.startAnimation(animWobble);
             }
 
             // lives exhausted
@@ -398,8 +453,19 @@ public class GameActivity extends Activity {
                 btnTap.setText("Sorry! You ran out of lives!\n\nTouch to try Again...");
                 lastTapNum = 0;
                 btnTap.setBackgroundResource(0);
-                btnTweet.setVisibility(View.VISIBLE);
+                if(score > 0) btnTweet.setVisibility(View.VISIBLE);
+                else btnTweet.setVisibility(View.INVISIBLE);
+                if(score > hiScore){
+                    hiScore = score;
+                    editor = prefs.edit();
+                    editor.putInt(HI_SCORE_KEY, hiScore);
+                    tvHiScore.setText("| " + hiScore);
+                    Toast.makeText(getApplicationContext(), "New High Score!", Toast.LENGTH_SHORT).show();
+                }
             }
+
+            // update the score
+            tvScore.setText(String.format("%d", score));
         }
     };
 

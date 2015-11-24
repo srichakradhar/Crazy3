@@ -62,4 +62,8 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="send_to">Share through...</string>
     <string name="share_on_twitter">Show off on Twitter</string>
+    <string name="pro">Pro</string>
+    <string name="kids">Kids</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!--<string name="banner_ad_unit_id">ca-app-pub-8736062206087440/5558954508</string>-->
 </resources>

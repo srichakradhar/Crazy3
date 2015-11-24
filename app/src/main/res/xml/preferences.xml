@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <EditTextPreference android:title="Your Name"
         android:key="username"
         android:summary="Please provide your username"></EditTextPreference>
 
+    <PreferenceCategory android:key="game_settings" android:title="Settings">
     <ListPreference     android:title="Speed"
         android:summary="Select the Speed at which numbers change (in sec)"
         android:key="speed"
@@ -17,4 +19,5 @@
         android:defaultValue="3"
         android:entries="@array/multiples"
         android:entryValues="@array/multiples" />
+    </PreferenceCategory>
 </PreferenceScreen>

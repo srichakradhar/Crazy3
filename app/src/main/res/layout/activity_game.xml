@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffff5376"
-    android:gravity="center">
+    android:gravity="center"
+    android:padding="@dimen/abc_action_bar_icon_vertical_padding_material">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -11,24 +13,35 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
         android:gravity="center_vertical"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
         android:background="@drawable/line">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="0"
-            android:id="@+id/tvScore"
+            android:id="@+id/tv_score"
             android:layout_weight="1"
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:foregroundGravity="center"
-            android:gravity="left"
+            android:gravity="start"
             android:singleLine="true"
-            android:layout_marginRight="5dp" />
+            android:layout_marginEnd="5dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="| 0"
+            android:id="@+id/tv_hi_score"
+            android:layout_weight="1"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:foregroundGravity="center"
+            android:gravity="end"
+            android:singleLine="true"
+            android:layout_marginEnd="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,23 +102,29 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:gravity="center"
-        android:padding="@dimen/abc_button_padding_horizontal_material"
         android:textColor="#ffffff"
         android:textSize="96sp"
         android:textStyle="bold"
-        android:background="@android:color/transparent" />
+        android:background="@android:color/transparent"
+        android:paddingBottom="@dimen/abc_button_padding_horizontal_material" />
 
     <Button
         android:id="@+id/button_tweet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:onClick="onClickTwitt"
         android:text="@string/share_on_twitter"
-        android:layout_marginBottom="20dp"
         android:visibility="invisible"
         android:background="@android:color/transparent"
         android:textColor="#ffffff" />
+
+    <com.google.android.gms.ads.AdView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/adView"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id">
+
+    </com.google.android.gms.ads.AdView>
 
 </LinearLayout>
