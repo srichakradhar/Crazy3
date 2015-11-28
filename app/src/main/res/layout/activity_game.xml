@@ -27,7 +27,8 @@
             android:foregroundGravity="center"
             android:gravity="start"
             android:singleLine="true"
-            android:layout_marginEnd="5dp" />
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"/>
 
         <TextView
             android:layout_width="0dp"
@@ -41,7 +42,8 @@
             android:foregroundGravity="center"
             android:gravity="end"
             android:singleLine="true"
-            android:layout_marginEnd="5dp" />
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -50,6 +52,7 @@
             android:text="♥♥♥"
             android:id="@+id/text_view_lives"
             android:textColor="@android:color/background_light"
+            android:layout_marginEnd="5dp"
             android:layout_marginRight="10dp" />
 
         <Button
@@ -74,16 +77,6 @@
             android:layout_margin="5dp"
             android:padding="5dp"/>
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/button_preferences"
-            android:background="@drawable/settings"
-            android:height="48dp"
-            android:width="48dp"
-            android:layout_margin="5dp"
-            android:padding="5dp" />
     </LinearLayout>
 
     <View
@@ -122,8 +115,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/adView"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
+        ads:adUnitId="@string/banner_ad_unit_id"
+        ads:adSize="BANNER">
 
     </com.google.android.gms.ads.AdView>
 

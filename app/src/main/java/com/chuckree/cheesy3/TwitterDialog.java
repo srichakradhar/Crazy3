@@ -1,4 +1,4 @@
-package com.chuckree.tapordie;
+package com.chuckree.cheesy3;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -17,7 +17,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.chuckree.tapordie.Twitter_Handler.TwDialogListener;
+import com.chuckree.cheesy3.Twitter_Handler.TwDialogListener;
 
 public class TwitterDialog extends Dialog {
 

@@ -1,4 +1,4 @@
-package com.chuckree.tapordie;
+package com.chuckree.cheesy3;
 
 import android.content.Context;
 import android.content.SharedPreferences;

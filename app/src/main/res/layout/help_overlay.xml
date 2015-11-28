@@ -5,25 +5,23 @@
     android:background="#aa000000">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Is it a multiple of 3?\nThumb down!!!"
+        android:text="@string/help_text"
         android:id="@+id/textView_help_text"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
         android:textColor="@android:color/background_light"
-        android:textSize="28sp"
+        android:textSize="20sp"
         android:gravity="center"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
+        android:layout_height="wrap_content">
 
         <View android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -35,9 +33,6 @@
             android:id="@+id/image_tap_finger"
             android:src="@drawable/finger_tap"
             android:layout_weight="1"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_gravity="bottom" />
 
     </LinearLayout>

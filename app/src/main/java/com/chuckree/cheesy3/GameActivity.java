@@ -1,4 +1,4 @@
-package com.chuckree.tapordie;
+package com.chuckree.cheesy3;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -35,15 +35,16 @@ import java.io.OutputStream;
 
 public class GameActivity extends Activity {
 
-    private static final String HI_SCORE_KEY = "High Score";
+    private static final String HI_SCORE_KEY = "HIGH_SCORE", MY_PREFERENCES = "com.chuckree.cheesy3.GAME_ACTIVITY_PREFERENCES",
+            GAME_MODE_KEY = "Game Mode";
     private Button btnTap, btnShare;
     int count = 0;
-    long timerPeriod = 1000;
+    long timerPeriod = 333;
     private int multiple = 3, hiScore = 0, lives = 3, level = 1, lastTapNum = 0;
     private static int score = 0;
     TextView tvScore, tvHiScore;
     private boolean gameStarted = false;
-    private String TAG = GameActivity.class.toString(), string_img_url = null , string_msg = null;;
+    private String TAG = GameActivity.class.toString(), string_img_url = null , string_msg = null;
     private Handler handler = new Handler();
     private Typeface tfMontserrat;
     private static Animation scaleUp, scaleDown;
@@ -62,15 +63,17 @@ public class GameActivity extends Activity {
     private SoundPool soundPool;
     private int soundDingID, soundErrID;
     float volume;
+    private AdView mAdView;
+    private AdRequest adRequest;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.chuckree.tapordie.R.layout.activity_game);
+        setContentView(com.chuckree.cheesy3.R.layout.activity_game);
 
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView = (AdView) findViewById(R.id.adView);
+        adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -86,26 +89,26 @@ public class GameActivity extends Activity {
         soundErrID = soundPool.load(this, R.raw.err, 1);
 
         tfMontserrat = Typeface.createFromAsset(getAssets(),"fonts/Montserrat-Hairline.otf");
-        btnTap = (Button) findViewById(com.chuckree.tapordie.R.id.button_tap);
+        btnTap = (Button) findViewById(com.chuckree.cheesy3.R.id.button_tap);
         // btnPause = (Button) findViewById(R.id.button_pause);
         btnShare = (Button) findViewById(R.id.button_share);
         tvScore = (TextView) findViewById(R.id.tv_score);
         tvHiScore = (TextView) findViewById(R.id.tv_hi_score);
-        Button btnHelp = (Button) findViewById(com.chuckree.tapordie.R.id.button_help);
-        lblLives = (TextView) findViewById(com.chuckree.tapordie.R.id.text_view_lives);
+        Button btnHelp = (Button) findViewById(com.chuckree.cheesy3.R.id.button_help);
+        lblLives = (TextView) findViewById(com.chuckree.cheesy3.R.id.text_view_lives);
         btnTap.setTypeface(tfMontserrat);
         btnTweet = (Button) findViewById(R.id.button_tweet);
-        Button btnSettings = (Button) findViewById(com.chuckree.tapordie.R.id.button_preferences);
         // btnPause.setTypeface(tfMontserrat);
         tvScore.setTypeface(tfMontserrat);
         tvHiScore.setTypeface(tfMontserrat);
         context = getApplicationContext();
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        prefs = getSharedPreferences(MainActivity.MY_PREFERENCES, Context.MODE_PRIVATE);
-        proMode = prefs.getBoolean(MainActivity.GAME_MODE_KEY, false);
+        prefs = getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+        proMode = prefs.getBoolean(GAME_MODE_KEY, false);
         if(proMode) timerPeriod = 1000 / Integer.parseInt(preferences.getString("speed", "1"));
         multiple = Integer.parseInt(preferences.getString("multiple", "3"));
         hiScore = prefs.getInt(HI_SCORE_KEY, 0);
+        tvHiScore.setText(String.format("%d", hiScore));
 
         if(getIntent().getBooleanExtra("help", false)) showOverLay();
         // bgShape = (GradientDrawable) this.getResources().getDrawable(R.drawable.circle);
@@ -157,9 +160,7 @@ public class GameActivity extends Activity {
                         if(score > 0) score -= 1;
                         lives -= 1;
 
-                        // TODO: call Sound2.play
-
-                        // TODO: set lblLives.Text to "♥♥♥".substring(lives) + ♡♡♡.substring(3 - lives)
+                        // set lblLives.Text to "♥♥♥".substring(lives) + ♡♡♡.substring(3 - lives)
                         String strLives = "";
 
                         if(lives <= 0)
@@ -171,16 +172,18 @@ public class GameActivity extends Activity {
 
                         lblLives.setText(strLives);
 
-                        // TODO: A mechanism to alert the wrong doing (e.g. changing bg & fg colors)
+                        // A mechanism to alert the wrong doing (e.g. changing bg & fg colors)
 
                         if (lives <= 0) {
-                            scaleDown = AnimationUtils.loadAnimation(context, com.chuckree.tapordie.R.anim.scale_down);
+                            scaleDown = AnimationUtils.loadAnimation(context, com.chuckree.cheesy3.R.anim.scale_down);
                             scaleDown.setDuration(timerPeriod/2);
                             btnTap.setAnimation(scaleDown);
                         }
 
                         bgShape.setColor(Color.RED);
                         // bgShape.invalidateSelf();
+                        Animation animWobble = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.wobble);
+                        btnTap.startAnimation(animWobble);
 
                         // Is the sound loaded already?
                         if (loaded)
@@ -198,8 +201,8 @@ public class GameActivity extends Activity {
                         lastTapNum = 0;
 
                         // set btnTap.Background to transparent
-                        btnTap.setBackgroundResource(com.chuckree.tapordie.R.drawable.circle);
-                        scaleUp = AnimationUtils.loadAnimation(context, com.chuckree.tapordie.R.anim.scale_up);
+                        btnTap.setBackgroundResource(com.chuckree.cheesy3.R.drawable.circle);
+                        scaleUp = AnimationUtils.loadAnimation(context, com.chuckree.cheesy3.R.anim.scale_up);
                         btnTap.setAnimation(scaleUp);
                         bgShape = (GradientDrawable) btnTap.getBackground();
 
@@ -218,12 +221,12 @@ public class GameActivity extends Activity {
                     lives = 3;
 //                    level = 1;
 //                    timerPeriod = 1000;
-                    // TODO Set lblLives.Text to ❤❤❤ or ♥♥♥ and ♡♡♡
+                    // Set lblLives.Text to ❤❤❤ or ♥♥♥ and ♡♡♡
                     lblLives.setText("♥♥♥");
 
                     btnTap.setTextSize(96);
-                    btnTap.setBackgroundResource(com.chuckree.tapordie.R.drawable.circle);
-                    scaleUp = AnimationUtils.loadAnimation(context, com.chuckree.tapordie.R.anim.scale_up);
+                    btnTap.setBackgroundResource(com.chuckree.cheesy3.R.drawable.circle);
+                    scaleUp = AnimationUtils.loadAnimation(context, com.chuckree.cheesy3.R.anim.scale_up);
                     bgShape = (GradientDrawable) btnTap.getBackground();
                     bgShape.setColor(Color.WHITE);
                     btnTap.setAnimation(scaleUp);
@@ -259,15 +262,6 @@ public class GameActivity extends Activity {
                 gameStarted = false;
                 handler.removeCallbacks(runnable);
                 showOverLay();
-            }
-        });
-
-        btnSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameStarted = false;
-                handler.removeCallbacks(runnable);
-                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
             }
         });
 
@@ -316,10 +310,10 @@ public class GameActivity extends Activity {
 
         final Dialog dialog = new Dialog(GameActivity.this, android.R.style.Theme_Translucent_NoTitleBar);
 
-        dialog.setContentView(com.chuckree.tapordie.R.layout.help_overlay);
+        dialog.setContentView(com.chuckree.cheesy3.R.layout.help_overlay);
 
-        LinearLayout layout = (LinearLayout) dialog.findViewById(com.chuckree.tapordie.R.id.layout_help_overlay);
-        TextView lblHelpText = (TextView) layout.findViewById(com.chuckree.tapordie.R.id.textView_help_text);
+        LinearLayout layout = (LinearLayout) dialog.findViewById(com.chuckree.cheesy3.R.id.layout_help_overlay);
+        TextView lblHelpText = (TextView) layout.findViewById(com.chuckree.cheesy3.R.id.textView_help_text);
         lblHelpText.setTypeface(tfMontserrat);
 
         layout.setOnClickListener(new View.OnClickListener() {
@@ -329,8 +323,8 @@ public class GameActivity extends Activity {
             public void onClick(View arg0) {
 
                 gameStarted = true;
-                btnTap.setBackgroundResource(com.chuckree.tapordie.R.drawable.circle);
-                scaleUp = AnimationUtils.loadAnimation(context, com.chuckree.tapordie.R.anim.scale_up);
+                btnTap.setBackgroundResource(com.chuckree.cheesy3.R.drawable.circle);
+                scaleUp = AnimationUtils.loadAnimation(context, com.chuckree.cheesy3.R.anim.scale_up);
                 btnTap.setAnimation(scaleUp);
                 bgShape = (GradientDrawable) btnTap.getBackground();
                 runnable.run();
@@ -368,7 +362,7 @@ public class GameActivity extends Activity {
 
             }
             // catching when number is missed while playing in pro mode
-            if(((count - 1) % multiple == 0) && lastTapNum < count - multiple && proMode){
+            if(((count - 1) % multiple == 0) && lastTapNum < count - multiple){ // Add && proMode to count skipped multiples
 
                 Log.d(TAG, "last tapped number was " + lastTapNum);
 
@@ -404,20 +398,23 @@ public class GameActivity extends Activity {
                 // set Clock1.Enabled to false
                 handler.removeCallbacks(runnable);
 
-                // set btnPause.Visible to false
+                adRequest = new AdRequest.Builder().build();
+                mAdView.loadAd(adRequest);
 
-                // if a new high score has been made TODO: customize for tutorial mode
-                if( score > hiScore){
-
-                    // set btnTap.Text to "Awesome! You Nailed It!!!"
-                    btnTap.setText("Awesome! You Nailed It!!!");
-
-                }
-                // TODO: customize for tutorial mode
-                else{
-                    // if(isInTutorialMode)// btnTap.setText("Sorry! You are in tutorial mode!");
-                    // else btnTap.setText("Sorry! You couldn't beat the high score!");
-                }
+//                // set btnPause.Visible to false
+//
+//                // if a new high score has been made TODO: customize for tutorial mode
+//                if( score > hiScore){
+//
+//                    // set btnTap.Text to "Awesome! You Nailed It!!!"
+//                    btnTap.setText("Awesome! You Nailed It!!!");
+//
+//                }
+//                // TODO: customize for tutorial mode
+//                else{
+//                    // if(isInTutorialMode)// btnTap.setText("Sorry! You are in tutorial mode!");
+//                    // else btnTap.setText("Sorry! You couldn't beat the high score!");
+//                }
             }
 // else if(level >= 4){
 //                // change btnTap background color
@@ -459,6 +456,7 @@ public class GameActivity extends Activity {
                     hiScore = score;
                     editor = prefs.edit();
                     editor.putInt(HI_SCORE_KEY, hiScore);
+                    editor.commit();
                     tvHiScore.setText("| " + hiScore);
                     Toast.makeText(getApplicationContext(), "New High Score!", Toast.LENGTH_SHORT).show();
                 }
@@ -475,23 +473,17 @@ public class GameActivity extends Activity {
         handler.removeCallbacks(runnable);
     }
 
-
-    public void Call_My_Blog(View v) {
-        Intent intent = new Intent(GameActivity.this, My_Blog.class);
-        startActivity(intent);
-
-    }
-
     // Here you can pass the string message & image path which you want to share
     // in Twitter.
     public void onClickTwitt() {
         if (isNetworkAvailable()) {
             Twitt_Sharing twitt = new Twitt_Sharing(GameActivity.this, consumer_key, secret_key);
             string_img_url = "https://sites.google.com/site/srichakra3nsr3/my-profile/nenu.jpg";
-            string_msg = "I have scored " + score + " in Tap or Die.\nCan you beat my score? Check out: http://chuckree.com/android/tap_or_die";
+            string_msg = "I have scored " + score + " in Tap or Die.\nCan you beat my score?\n" +
+                    "Check out: https://play.google.com/store/apps/details?id=com.chuckree.tapordie";
             InputStream in = null;
             OutputStream out = null;
-            String filename = "tapOrDie.png";
+            String filename = "cheesy3.png";
             try {
                 in = getAssets().open(filename);
                 casted_image = new File(getExternalFilesDir(null), filename);

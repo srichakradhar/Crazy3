@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tap or Die</string>
+    <string name="app_name">Cheesy 3</string>
     <string name="start">Start</string>
     <string name="title_activity_settings">Settings</string>
 
@@ -64,6 +64,7 @@
     <string name="share_on_twitter">Show off on Twitter</string>
     <string name="pro">Pro</string>
     <string name="kids">Kids</string>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <!--<string name="banner_ad_unit_id">ca-app-pub-8736062206087440/5558954508</string>-->
+    <!--<string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>-->
+    <string name="banner_ad_unit_id">ca-app-pub-8736062206087440/5558954508</string>
+    <string name="help_text">Tap the screen, when it\'s a multiple of 3 to score.\nIf you miss the multiple or tap on wrong number, you would lose a point and a life!</string>
 </resources>
