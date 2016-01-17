@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cheesy 3</string>
+    <string name="app_name">Crazy 3</string>
     <string name="start">Start</string>
     <string name="title_activity_settings">Settings</string>
 
@@ -61,10 +61,24 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="send_to">Share through...</string>
-    <string name="share_on_twitter">Show off on Twitter</string>
     <string name="pro">Pro</string>
     <string name="kids">Kids</string>
     <!--<string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>-->
     <string name="banner_ad_unit_id">ca-app-pub-8736062206087440/5558954508</string>
     <string name="help_text">Tap the screen, when it\'s a multiple of 3 to score.\nIf you miss the multiple or tap on wrong number, you would lose a point and a life!</string>
+    <string name="app_id">261335643059</string>
+    <string name="global_leaderboard">CgkIs-fFxs0HEAIQAQ</string>
+    <string name="achievement_baby_steps">CgkIs-fFxs0HEAIQDg</string>
+    <string name="achievement_a_good_friend">CgkIs-fFxs0HEAIQDw</string>
+    <string name="achievement_winners_never_quit">CgkIs-fFxs0HEAIQEA</string>
+    <string name="achievement_score_3">CgkIs-fFxs0HEAIQEQ</string>
+    <string name="achievement_score_39">CgkIs-fFxs0HEAIQEg</string>
+    <string name="achievement_score_99">CgkIs-fFxs0HEAIQEw</string>
+    <string name="achievements">Achievements</string>
+    <string name="show_off">Challenge\nyour friends: </string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="app_id_fb">1091165717568973</string>
+    <string name="tap_on_heart">Tap on heart to buy more lives.</string>
+    <!--<string name="app_id_fb">1096911363661075</string>-->
+
 </resources>

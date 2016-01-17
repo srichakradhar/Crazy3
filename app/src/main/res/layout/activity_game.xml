@@ -3,8 +3,9 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffff5376"
+    android:background="@color/background_color"
     android:gravity="center"
+    android:id="@+id/linear_layout_game_activity"
     android:padding="@dimen/abc_action_bar_icon_vertical_padding_material">
 
     <LinearLayout
@@ -13,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
         android:gravity="center_vertical"
-        android:background="@drawable/line">
+        android:background="@drawable/line"
+        android:id="@+id/lives_button">
 
         <TextView
             android:layout_width="0dp"
@@ -45,15 +47,18 @@
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="♥♥♥"
-            android:id="@+id/text_view_lives"
-            android:textColor="@android:color/background_light"
+            android:text="3"
+            android:id="@+id/button_lives"
+            android:textColor="@color/background_color"
             android:layout_marginEnd="5dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:background="@drawable/little_heart"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -85,6 +90,39 @@
         android:layout_weight="0.1" >
     </View>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:gravity="center"
+        android:id="@+id/layout_share"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_off"
+            android:textColor="#ffffff"
+            android:background="@android:color/transparent"
+            android:textSize="24sp"
+            android:id="@+id/text_view_show_off"/>
+
+        <Button
+            android:id="@+id/button_tweet"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="onClickTwitt"
+            android:background="@drawable/twitter" />
+
+        <Button
+            android:id="@+id/button_fb"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/facebook" />
+
+    </LinearLayout>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -101,15 +139,45 @@
         android:background="@android:color/transparent"
         android:paddingBottom="@dimen/abc_button_padding_horizontal_material" />
 
-    <Button
-        android:id="@+id/button_tweet"
-        android:layout_width="wrap_content"
+    <View
+        android:layout_width="20dp"
+        android:layout_height="1dp" >
+    </View>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickTwitt"
-        android:text="@string/share_on_twitter"
-        android:visibility="invisible"
-        android:background="@android:color/transparent"
-        android:textColor="#ffffff" />
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_weight="0.1"
+        android:id="@+id/layout_games"
+        android:visibility="gone">
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/button_achievements"
+            android:layout_width="36dp"
+            android:layout_height="42dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/ic_achievement"
+            android:padding="5dp" />
+
+        <Button
+            android:id="@+id/button_leaderboard"
+            android:layout_width="42dp"
+            android:layout_height="36dp"
+            android:background="@drawable/leaderboard"
+            android:padding="5dp"
+            android:layout_margin="5dp" />
+
+    </LinearLayout>
+
+    <!-- sign-out button -->
 
     <com.google.android.gms.ads.AdView
         android:layout_width="wrap_content"

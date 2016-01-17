@@ -6,4 +6,5 @@
     <color name="main_button">#2EBE62</color>
     <color name="button_text">#6A3718</color>
     <color name="wrong_red">#D32F2F</color>
+    <color name="background_color">#ffff5376</color>
 </resources>

@@ -1,4 +1,4 @@
-package com.chuckree.cheesy3;
+package com.chuckree.crazy3;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.chuckree.cheesy3.Twitter_Handler.TwDialogListener;
+import com.chuckree.crazy3.Twitter_Handler.TwDialogListener;
 
 import java.io.File;
 

@@ -1,4 +1,4 @@
-package com.chuckree.cheesy3;
+package com.chuckree.crazy3;
 
 import org.junit.Test;
 
