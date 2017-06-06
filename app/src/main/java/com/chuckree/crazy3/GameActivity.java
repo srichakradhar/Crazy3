@@ -329,7 +329,6 @@ public class GameActivity extends BaseGameActivity implements View.OnClickListen
                         editor.putInt(GAMES_PLAYED, deaths);
                         editor.commit();
                     }
-
                 }
                 // clicked btnTap to RESET the game
                 else {
@@ -523,6 +522,7 @@ public class GameActivity extends BaseGameActivity implements View.OnClickListen
             // update UI accordingly
             if (mHasLives) showToast("you had purchased 5 lives!");
             if (inventory.hasPurchase(SKU_REMOVE_ADS)) showToast("You are a premium member!");
+            mAdView.setVisibility(View.GONE);
         }
     };
 
@@ -729,7 +729,7 @@ public class GameActivity extends BaseGameActivity implements View.OnClickListen
                 handler.postDelayed(runnable, timerPeriod);
             } else if (lives <= 0)    // to avoid execution when btnPause pressed
             {
-                btnTap.setTextSize(22);
+                if(!gameStarted) btnTap.setTextSize(22);
                 btnTap.setEnabled(false);
                 new CountDownTimer(4000, 1000) {
                     int count = 3;
